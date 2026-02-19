@@ -176,7 +176,7 @@ def get_var_param(crl2_xoff, crl2_yoff):
         ['name', 's', 'NSLS-II CHX beamline', 'simulation name'],
     
     #---Data Folder
-        ['fdir', 's', 'NSLS-II_CHX_beamline/', 'folder (directory) name for reading-in input and saving output data files'],
+        ['fdir', 's', '/tmp/blop/sim', 'folder (directory) name for reading-in input and saving output data files'],
     
     #---Electron Beam
         ['ebm_nm', 's', '', 'standard electron beam name'],
@@ -501,7 +501,7 @@ def build_beamline(crl2_xoff, crl2_yoff):
 def run_process(beamline):
     v, op = beamline
     srwpy.srwl_bl.SRWLBeamline(_name=v.name).calc_all(v, op)
-    raw_image = read_srw_file("NSLS-II_CHX_beamline/res_int_pr_se.dat")["data"]
+    raw_image = read_srw_file("/tmp/blop/sim/res_int_pr_se.dat")["data"]
     return raw_image
         
 def read_srw_file(filename, ndim=2):

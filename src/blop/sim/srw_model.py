@@ -6,6 +6,7 @@ import srwpy.srwl_uti_smp
 import srwpy.uti_plot_com as srw_io
 import os
 import numpy as np
+from pathlib import Path
 
 def set_optics(v, names=None, want_final_propagation=True):
     el = []
@@ -364,7 +365,7 @@ def get_var_param(crl2_xoff, crl2_yoff):
         ['op_S0_HDM_L', 'f', 6.899999999999999, 'length'],
     
         # HDM: mirror
-        ['op_HDM_hfn', 's', 'NSLS-II_CHX_beamline/mirror_1d.dat', 'heightProfileFile'],
+        ['op_HDM_hfn', 's', Path(__file__).parent / "mirror_1d.dat", 'heightProfileFile'],
         ['op_HDM_dim', 's', 'x', 'orientation'],
         ['op_HDM_ang', 'f', 0.0031415926, 'grazingAngle'],
         ['op_HDM_amp_coef', 'f', 1.0, 'heightAmplification'],

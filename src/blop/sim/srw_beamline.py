@@ -7,15 +7,13 @@ from typing import Any
 
 import h5py  # type: ignore[import-untyped]
 import numpy as np
-import scipy as sp  # type: ignore[import-untyped]
-from event_model import StreamRange, compose_resource, compose_stream_resource  # type: ignore[import-untyped]
+from event_model import StreamRange, compose_stream_resource  # type: ignore[import-untyped]
 from ophyd import Component as Cpt  # type: ignore[import-untyped]
 from ophyd import Device, Kind, Signal  # type: ignore[import-untyped]
 from ophyd.sim import NullStatus, new_uid  # type: ignore[import-untyped]
 from ophyd.utils import make_dir_tree  # type: ignore[import-untyped]
 from . import get_beam_stats
 from .handlers import ExternalFileReference
-
 from .srw_model import build_beamline, run_process
 
 TEST = False
@@ -68,16 +66,12 @@ class TiledDetector(Device):
                 extent=(self.limits[0][0], self.limits[0][1], self.limits[1][0], self.limits[1][1]),
             )
         self.counter = 0
-        # self.beamLine = None
-        # self.beamLine = build_beamline(self.parent.crl2_xoff.get(), self.parent.crl2_yoff.get())
-
     
     def trigger(self):
         super().trigger()
 
-        self.beamLine = build_beamline(self.parent.crl2_xoff.get(), self.parent.crl2_yoff.get())
-        # run srw sim and get output here
-        raw_image = run_process(self.beamLine)
+        beamline = build_beamline(self.parent.crl2_xoff.get(), self.parent.crl2_yoff.get())
+        raw_image = run_process(beamline)
         # raw_image = self.generate_beam(noise=self.noise.get())
 
         current_frame = next(self._counter)

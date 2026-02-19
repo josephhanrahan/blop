@@ -170,7 +170,6 @@ def set_optics(v, names=None, want_final_propagation=True):
 
     return srwpy.srwlib.SRWLOptC(el, pp)
 
-
 def get_var_param(crl2_xoff, crl2_yoff):
     
     varParam = [
@@ -491,7 +490,6 @@ def get_var_param(crl2_xoff, crl2_yoff):
 
 def build_beamline(crl2_xoff, crl2_yoff):
     varParam = get_var_param(crl2_xoff, crl2_yoff)
-    # v = srwpy.srwl_bl.srwl_uti_parse_options(srwpy.srwl_bl.srwl_uti_ext_options(varParam), use_sys_argv=True)
     v = srwpy.srwl_bl.srwl_uti_parse_options(srwpy.srwl_bl.srwl_uti_ext_options(varParam), use_sys_argv=False)
     names = ['S0','S0_HDM','HDM','HDM_S1','S1','S1_S2','S2','S2_CRL1','CRL1','CRL2','CRL2_KLA','KLA','KL','KL_S3','S3','S3_Sample']
     op = set_optics(v, names, True)
@@ -503,12 +501,9 @@ def build_beamline(crl2_xoff, crl2_yoff):
 def run_process(beamline):
     v, op = beamline
     srwpy.srwl_bl.SRWLBeamline(_name=v.name).calc_all(v, op)
-
-    # obtain image and return here
     raw_image = read_srw_file("NSLS-II_CHX_beamline/res_int_pr_se.dat")["data"]
     return raw_image
         
-
 def read_srw_file(filename, ndim=2):
     data, mode, ranges, labels, units = srw_io.file_load(filename)
     data = np.array(data)
@@ -542,21 +537,3 @@ def read_srw_file(filename, ndim=2):
     #     ret.update(utils.get_beam_stats(data, horizontal_extent, vertical_extent))
 
     return ret
-
-
-def epilogue():
-    pass
-
-
-# def main():
-#     v = srwpy.srwl_bl.srwl_uti_parse_options(srwpy.srwl_bl.srwl_uti_ext_options(get_var_param()), use_sys_argv=True)
-#     names = ['S0','S0_HDM','HDM','HDM_S1','S1','S1_S2','S2','S2_CRL1','CRL1','CRL2','CRL2_KLA','KLA','KL','KL_S3','S3','S3_Sample']
-#     op = set_optics(v, names, True)
-#     v.ws = True
-#     v.ws_pl = 'xy'
-#     v.wm = False
-#     srwpy.srwl_bl.SRWLBeamline(_name=v.name).calc_all(v, op)
-
-# main()
-
-# epilogue()

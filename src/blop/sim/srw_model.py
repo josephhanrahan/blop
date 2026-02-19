@@ -495,7 +495,11 @@ def build_beamline(crl2_xoff, crl2_yoff):
     names = ['S0','S0_HDM','HDM','HDM_S1','S1','S1_S2','S2','S2_CRL1','CRL1','CRL2','CRL2_KLA','KLA','KL','KL_S3','S3','S3_Sample']
     op = set_optics(v, names, True)
     v.ws = True
-    # v.ws_pl = 'xy'
+    # v.ws_pl = 'xy
+    v.ws_pl = 0
+    v.wm_pl = 0
+    v.wi_pl = 0
+    v.wg_pl = 0
     v.wm = False
     return v, op
 

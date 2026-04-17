@@ -8,18 +8,23 @@ version = "0.0.0"
 description = "Example simulations and benchmarks for blop (not published to PyPI)"
 readme = "README.md"
 authors = [{ name = "Thomas Hopkins", email = "thopkins1@bnl.gov" }]
-requires-python = ">=3.10"
+requires-python = "==3.11.*"
 dependencies = [
-  "blop",
+  "blop @ git+https://github.com/bluesky/blop.git@main",
   "ophyd-async",
   "h5py",
   "area-detector-handlers",
+  "tiled[all]",
   "bluesky-tiled-plugins",
   "numpy",
   "scipy",
   "matplotlib",
-  "xrt>=1.6.1,<2",
+  "ipykernel",
+  "xrt @ git+https://github.com/kklmn/xrt.git@new_glow",
 ]
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["blop_sim"]

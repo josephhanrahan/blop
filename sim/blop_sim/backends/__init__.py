@@ -3,5 +3,6 @@
 from .core import SimBackend
 from .simple import SimpleBackend
 from .xrt import XRTBackend
+from .xrt_bmm import XRTBMMBackend
 
-__all__ = ["SimBackend", "SimpleBackend", "XRTBackend"]
+__all__ = ["SimBackend", "SimpleBackend", "XRTBackend", "XRTBMMBackend"]

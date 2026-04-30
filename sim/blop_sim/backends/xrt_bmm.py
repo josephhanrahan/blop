@@ -26,6 +26,9 @@ class XRTBMMBackend(SimBackend):
         if self._beamline is None:
             self._beamline = build_beamline()
 
+    def change_energy(self, ev):
+        self._beamline = build_beamline(ev)
+
     async def generate_beam(self) -> np.ndarray:
         """Generate beam using XRT ray-tracing.
 

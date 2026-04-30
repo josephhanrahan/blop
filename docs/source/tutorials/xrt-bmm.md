@@ -13,7 +13,7 @@ kernelspec:
 
 # Using Blop at BMM to Solve an Optimization Problem
 
-In this tutorial, you will learn how to use Blop to optimize multiple elements to achieve the desired outcome of consistent lateral position at the sample across different energies while maintaining maximal intensity. This example mimics a near identical optimization that was performed at BMM in May 2026.
+In this tutorial, you will learn how to use Blop to optimize multiple elements to achieve the desired outcome of consistent lateral position at the sample across different energies while maintaining maximal intensity. This example mimics a near identical optimization that was performed at BMM in May of 2026.
 
 - How **degrees of freedom (DOFs)** represent the parameters you can adjust in an experiment
 - How **objectives** define what you're trying to optimize
@@ -21,9 +21,9 @@ In this tutorial, you will learn how to use Blop to optimize multiple elements t
 - How the **Agent** coordinates the optimization loop
 - How to **check optimization health** mid-run and continue
 
-We'll work with a simulated KB mirror beamline, but the concepts apply directly to real experimental setups.
+Just like the previous tutorial, we'll use simulated objects and motors to interact with the beamline, but the concepts apply directly to real experimental setups (in fact, the names of the optical elements are identical to those in BMM!).
 
-## What are KB Mirrors?
+## What optical elements are we moving, and why?
 
 KB mirror systems use two curved mirrors to focus X-ray beams. Each mirror has adjustable curvature—getting both just right produces a tight, intense focal spot. This is a multi-objective optimization problem: we want to maximize beam intensity while minimizing the spot size in both X and Y directions.
 

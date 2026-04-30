@@ -78,7 +78,7 @@ si01 = rmatse.Si(
     name=r"si01")
 
 
-def build_beamline():
+def build_beamline(ev=9050):
     BeamLine = raycing.BeamLine(
         name=r"BeamLine",
         description=None)
@@ -93,8 +93,8 @@ def build_beamline():
         eSigmaZ=4.47213595499958,
         xPrimeMax=0.5,
         zPrimeMax=0.5,
-        eMin=4040,
-        eMax=4060,
+        eMin=ev-10,
+        eMax=ev+10,
         K=10,
         period=100,
         n=2)
@@ -111,7 +111,7 @@ def build_beamline():
         R=[10000, 1000000])
 
     BeamLine.dcM01 = roes.dcm.DCM(
-        bragg=[4050],
+        bragg=[ev],
         limPhysX2=[-50.0, 50.0],
         limPhysY2=[-10.0, 50.0],
         material2=Si111,

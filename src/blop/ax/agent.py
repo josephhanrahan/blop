@@ -212,6 +212,8 @@ class Agent(_AxAgentMixin):
         Constraints on outcomes to be satisfied during optimization.
     checkpoint_path : str | None, optional
         The path to the checkpoint file to save the optimizer's state to.
+    random_seed : int | None, optional
+        The random seed used when creating the optimizer, enabling reproducible optimizations
     **kwargs : Any
         Additional keyword arguments to configure the Ax experiment.
 
@@ -242,6 +244,7 @@ class Agent(_AxAgentMixin):
         dof_constraints: Sequence[DOFConstraint] | None = None,
         outcome_constraints: Sequence[OutcomeConstraint] | None = None,
         checkpoint_path: str | None = None,
+        random_seed: int | None = None,
         **kwargs: Any,
     ):
         if any(isinstance(dof.actuator, str) for dof in dofs):
@@ -261,6 +264,7 @@ class Agent(_AxAgentMixin):
             if outcome_constraints
             else None,
             checkpoint_path=checkpoint_path,
+            client_kwargs={"random_seed": random_seed},
             **kwargs,
         )
         self._readable_cache: dict[str, InferredReadable] = {}

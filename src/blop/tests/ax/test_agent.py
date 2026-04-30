@@ -256,6 +256,29 @@ def test_agent_init_actuator_string_raises(mock_evaluation_function):
         Agent(sensors=[], dofs=[dof1, dof2], objectives=[objective], evaluation_function=mock_evaluation_function)
 
 
+def test_agent_random_seed(mock_evaluation_function):
+    dof1 = RangeDOF(name="test_movable1", bounds=(0, 10), parameter_type="float")
+    dof2 = RangeDOF(name="test_movable2", bounds=(0, 10), parameter_type="float")
+    objective = Objective(name="test_objective", minimize=False)
+
+    agent_seed_0 = Agent(
+        sensors=[], dofs=[dof1, dof2], objectives=[objective], evaluation_function=mock_evaluation_function, random_seed=0
+    )
+    agent_seed_0_copy = Agent(
+        sensors=[], dofs=[dof1, dof2], objectives=[objective], evaluation_function=mock_evaluation_function, random_seed=0
+    )
+    agent_seed_5 = Agent(
+        sensors=[], dofs=[dof1, dof2], objectives=[objective], evaluation_function=mock_evaluation_function, random_seed=5
+    )
+
+    parameterizations_seed_0 = agent_seed_0.suggest(10)
+    parameterizations_seed_0_copy = agent_seed_0_copy.suggest(10)
+    parameterizations_seed_5 = agent_seed_5.suggest(10)
+
+    assert parameterizations_seed_0 == parameterizations_seed_0_copy
+    assert parameterizations_seed_0 != parameterizations_seed_5
+
+
 def test_queueserver_agent_init(mock_re_manager_api, mock_evaluation_function):
     dof1 = RangeDOF(actuator="test_motor1", bounds=(0, 10), parameter_type="float")
     dof2 = RangeDOF(actuator="test_motor2", bounds=(0, 10), parameter_type="float")

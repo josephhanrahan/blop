@@ -259,3 +259,47 @@ def test_ax_optimizer_reconfigurable_search_space_rollback():
 
     # Rollback should restore the original state
     assert (p1.lower, p1.upper) == original_p1
+
+
+def test_ax_optimizer_fixed_seed():
+    optimizer_seed_0 = AxOptimizer(
+        parameters=[
+            RangeParameterConfig(name="x1", bounds=(-5.0, 5.0), parameter_type="float"),
+            RangeParameterConfig(name="x2", bounds=(-5.0, 5.0), parameter_type="float"),
+            ChoiceParameterConfig(name="x3", values=[0, 1, 2, 3, 4, 5], parameter_type="int", is_ordered=True),
+        ],
+        objective="y1,-y2",
+        parameter_constraints=["x1 + x2 <= 10"],
+        outcome_constraints=["y1 >= 0", "y2 <= 0"],
+        client_kwargs={"random_seed": 0},
+    )
+    suggestions_seed_0 = optimizer_seed_0.suggest(20)
+
+    optimizer_seed_0_copy = AxOptimizer(
+        parameters=[
+            RangeParameterConfig(name="x1", bounds=(-5.0, 5.0), parameter_type="float"),
+            RangeParameterConfig(name="x2", bounds=(-5.0, 5.0), parameter_type="float"),
+            ChoiceParameterConfig(name="x3", values=[0, 1, 2, 3, 4, 5], parameter_type="int", is_ordered=True),
+        ],
+        objective="y1,-y2",
+        parameter_constraints=["x1 + x2 <= 10"],
+        outcome_constraints=["y1 >= 0", "y2 <= 0"],
+        client_kwargs={"random_seed": 0},
+    )
+    suggestions_seed_0_copy = optimizer_seed_0_copy.suggest(20)
+
+    optimizer_seed_5 = AxOptimizer(
+        parameters=[
+            RangeParameterConfig(name="x1", bounds=(-5.0, 5.0), parameter_type="float"),
+            RangeParameterConfig(name="x2", bounds=(-5.0, 5.0), parameter_type="float"),
+            ChoiceParameterConfig(name="x3", values=[0, 1, 2, 3, 4, 5], parameter_type="int", is_ordered=True),
+        ],
+        objective="y1,-y2",
+        parameter_constraints=["x1 + x2 <= 10"],
+        outcome_constraints=["y1 >= 0", "y2 <= 0"],
+        client_kwargs={"random_seed": 5},
+    )
+    suggestions_seed_5 = optimizer_seed_5.suggest(20)
+
+    assert suggestions_seed_0 == suggestions_seed_0_copy
+    assert suggestions_seed_0 != suggestions_seed_5

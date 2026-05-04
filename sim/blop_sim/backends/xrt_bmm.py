@@ -54,7 +54,7 @@ class XRTBMMBackend(SimBackend):
 
         # Run ray tracing
         outDict = run_process(self._beamline)
-        lb = outDict["screen04_local"]
+        lb = outDict["XAS_SAMPLE_local"]
         # print("LB: ", lb)
 
         # Build histogram from ray data

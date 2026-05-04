@@ -85,7 +85,7 @@ si01 = rmats.elemental.Si(
     quantities=[1.0])
 
 
-def build_beamline():
+def build_beamline(ev=9050.0):
     BMM = raycing.BeamLine(
         name=r"BMM",
         description=None)
@@ -101,8 +101,8 @@ def build_beamline():
         betaZ=2.0000000000000004,
         xPrimeMax=0.75,
         zPrimeMax=0.1,
-        eMin=9040.0,
-        eMax=9060.0,
+        eMin=ev-10,
+        eMax=ev+10,
         K=10,
         period=100,
         n=2)
@@ -139,7 +139,7 @@ def build_beamline():
         cLimits=[0.0, 0.0])
 
     BMM.DCM = roes.dcm.DCM(
-        bragg="9050 eV",
+        bragg="{} eV".format(ev),
         limPhysX2=[-50.0, 50.0],
         limPhysY2=[0.0, 100.0],
         material2=Si111,

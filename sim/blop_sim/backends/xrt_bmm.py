@@ -37,49 +37,39 @@ class XRTBMMBackend(SimBackend):
         """
         self._ensure_beamline()
 
-        # Get KB mirror radii from devices
+        # get and set DCM roll
         dcm_roll = await self._get_dcm_roll()
+        self._beamline.DCM.cryst2roll = dcm_roll
+        print("ROLL: {}".format(self._beamline.DCM.cryst2roll))
 
-        # Update XRT beamline mirror parameters
-        # self._beamline.toroidMirror01.R = mirror_radii[0]  # Vertical mirror
-        # self._beamline.toroidMirror02.R = mirror_radii[1]  # Horizontal mirror
-        # self._beamline.dcM01.cryst2roll = dcm_roll
-
-        self._beamline.dcM01.cryst2roll = dcm_roll
-        print("ROLL: {}".format(self._beamline.dcM01.cryst2roll))
-
-        # TODO match to correct toroidMirror attrs
+        # get and set TFM (m2) yaw
         m2_yaw = await self._get_m2_yaw()
-        print("YAW await: {}".format(m2_yaw))
-        self._beamline.toroidMirror01.yaw = m2_yaw
-        print("YAW: {}".format(self._beamline.toroidMirror01.yaw))
+        self._beamline.M2_TFM.yaw = m2_yaw
+        print("YAW: {}".format(self._beamline.M2_TFM.yaw))
 
+        # get and set TFM (m2) lateral (x-position)
         m2_lateral = await self._get_m2_lateral()
-        print("LATERAL await: {}".format(m2_lateral))
-        self._beamline.toroidMirror01.center[0] = m2_lateral
-        print("LATERAL: {}".format(self._beamline.toroidMirror01.center))
+        self._beamline.M2_TFM.center[0] = m2_lateral
+        print("LATERAL: {}".format(self._beamline.M2_TFM.center))
+
         # Run ray tracing
         outDict = run_process(self._beamline)
         lb = outDict["screen04_local"]
-        print("LB: ", lb)
+        # print("LB: ", lb)
 
         # Build histogram from ray data
         hist2d, _, _ = build_histRGB(lb, lb, limits=self._limits, isScreen=True, shape=[400, 300])
+
+        # hist2d, _, _ = build_histRGB(lb, lb, limits = [[-0.6, 0.6], [-0.45, 0.45]], isScreen=True, shape=[400, 300])
         image = hist2d
 
-        # Add noise if requested
+        # Add noise if requested (pretty sure XRT already adds noise? don't think this is needed)
         if self._noise:
             image += 1e-3 * np.abs(np.random.standard_normal(size=image.shape))
 
         return image
 
     async def _get_dcm_roll(self) -> float:
-        """Get KB mirror radii from registered devices.
-
-        Returns:
-            [R1, R2] where R1 is first mirror (vertical), R2 is second mirror (horizontal)
-        """
-
         for name, device in self._device_states.items():
             if device["type"] == "dcm_xrt":
                 state = await self._get_device_state(name)

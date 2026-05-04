@@ -8,8 +8,7 @@ from .models.xrt_bmm_model import build_beamline, build_histRGB, run_process
 class XRTBMMBackend(SimBackend):
     """XRT ray-tracing simulation backend.
 
-    Uses the XRT package to perform realistic ray-tracing through a KB mirror pair.
-    Much slower than SimpleBackend but more physically accurate.
+    Uses the XRT package to perform realistic ray-tracing to simulate the BMM beamline.
     """
 
     def __init__(self, noise: bool = False):
@@ -40,27 +39,21 @@ class XRTBMMBackend(SimBackend):
         # get and set DCM roll
         dcm_roll = await self._get_dcm_roll()
         self._beamline.DCM.cryst2roll = dcm_roll
-        print("ROLL: {}".format(self._beamline.DCM.cryst2roll))
 
         # get and set TFM (m2) yaw
         m2_yaw = await self._get_m2_yaw()
         self._beamline.M2_TFM.yaw = m2_yaw
-        print("YAW: {}".format(self._beamline.M2_TFM.yaw))
 
         # get and set TFM (m2) lateral (x-position)
         m2_lateral = await self._get_m2_lateral()
         self._beamline.M2_TFM.center[0] = m2_lateral
-        print("LATERAL: {}".format(self._beamline.M2_TFM.center))
 
         # Run ray tracing
         outDict = run_process(self._beamline)
         lb = outDict["XAS_SAMPLE_local"]
-        # print("LB: ", lb)
 
         # Build histogram from ray data
         hist2d, _, _ = build_histRGB(lb, lb, limits=self._limits, isScreen=True, shape=[400, 300])
-
-        # hist2d, _, _ = build_histRGB(lb, lb, limits = [[-0.6, 0.6], [-0.45, 0.45]], isScreen=True, shape=[400, 300])
         image = hist2d
 
         # Add noise if requested (pretty sure XRT already adds noise? don't think this is needed)

@@ -7,14 +7,15 @@ from ...backends import SimBackend
 
 
 class ToroidalMirror(StandardReadable):
-    """Toroidal Mirror with curvature radius control (for XRTBackend).
+    """Toroidal Mirror with yaw and lateral control (for XRTBMMBackend).
 
-    Exposes a single radius parameter that directly controls the XRT mirror R value.
-    Used with XRTBackend for ray-tracing simulation.
+    Exposes the yaw and lateral position (x) of the mirror.
+    Used with XRTBMMBackend for ray-tracing simulation.
 
     Args:
         backend: Simulation backend (should be XRTBackend)
-        roll: Initial roll of second crystal in mm
+        yaw: Yaw of the toroidal mirror
+        lateral: x position of the toroidal mirror
         name: Device name
     """
 
@@ -27,7 +28,7 @@ class ToroidalMirror(StandardReadable):
     ):
         self._backend = backend
 
-        # Curvature radius signal
+        # yaw and lateral signal
         with self.add_children_as_readables(Format.HINTED_SIGNAL):
             self.yaw = soft_signal_rw(float, yaw)
             self.lateral = soft_signal_rw(float, lateral)

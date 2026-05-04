@@ -7,13 +7,13 @@ from ...backends import SimBackend
 
 
 class DCM(StandardReadable):
-    """KB mirror with curvature radius control (for XRTBackend).
+    """DCM with second crystal roll control (for XRTBMMBackend).
 
-    Exposes a single radius parameter that directly controls the XRT mirror R value.
-    Used with XRTBackend for ray-tracing simulation.
+    Exposes the roll of the second crystal of the DCM
+    Used with XRTBMMBackend for ray-tracing simulation.
 
     Args:
-        backend: Simulation backend (should be XRTBackend)
+        backend: Simulation backend (should be XRTBMMBackend)
         roll: Initial roll of second crystal in mm
         name: Device name
     """
@@ -26,7 +26,7 @@ class DCM(StandardReadable):
     ):
         self._backend = backend
 
-        # Curvature radius signal
+        # second crystal roll
         with self.add_children_as_readables(Format.HINTED_SIGNAL):
             self.roll = soft_signal_rw(float, roll)
 
@@ -40,7 +40,7 @@ class DCM(StandardReadable):
         )
 
     async def _get_state(self) -> dict:
-        """Get current mirror state for backend (async)."""
+        """Get current DCM state for backend (async)."""
         return {
             "roll": await self.roll.get_value(),
         }

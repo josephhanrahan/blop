@@ -41,11 +41,9 @@ You can learn all about the various Ax features in the `Ax documentation <https:
   - Using external generators: `<https://ax.dev/docs/tutorials/external_generation_node/>`_
 
 - Configuring early stopping: `<https://ax.dev/docs/tutorials/early_stopping/>`_ (first-class support for early stopping is coming soon, see `<https://github.com/NSLS-II/blop/issues/129>`_)
-- Analyzing the optimization results and model fit: `<https://ax.dev/docs/tutorials/analyses/>`_ (see :func:`blop.ax.Agent.plot_objective` for an example in Blop)
+- Analyzing/Summarizing the optimization results and model fit: `<https://ax.dev/docs/tutorials/analyses/>`_ (see :func:`blop.ax.Agent.plot_objective` for an example in Blop)
 - Configuring tracking metrics: `<https://ax.dev/docs/recipes/tracking-metrics/>`_
 - Saving and loading experiments
 
   - To JSON: `<https://ax.dev/docs/recipes/experiment-to-json>`_
   - To SQLite: `<https://ax.dev/docs/recipes/experiment-to-sqlite>`_
-
-- Summarizing the experiment: `<https://ax.dev/docs/tutorials/quickstart/>`_

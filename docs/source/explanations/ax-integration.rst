@@ -30,7 +30,7 @@ We chose this minimal approach because it encompasses the basic usage of Ax for 
 Using the Ax API directly
 -------------------------
 
-You can access the underlying :class:`ax.Client` instance via :attr:`blop.ax.Agent.ax_client`, and interact with the API defined here `<https://ax.readthedocs.io/en/stable/api.html#ax.api.client.Client>`_
+You can access the underlying :class:`ax.Client` instance via :attr:`blop.ax.Agent.ax_client`, and interact with the `Client API <https://ax.readthedocs.io/en/stable/api.html#ax.api.client.Client>`_
 
 You can learn all about the various Ax features in the `Ax documentation <https://ax.dev/docs/tutorials/quickstart>`_. Some notable features that are not used by Blop by default are:
 

@@ -174,6 +174,9 @@ class ChoiceDOF(DOF):
             dependent_parameters=self.dependent_parameters,
         )
 
+    def __hash__(self):
+        return hash(self.parameter_name)
+
 
 class DOFConstraint:
     """

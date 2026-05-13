@@ -268,7 +268,7 @@ def test_agent_init_duplicate_dof_names(mock_evaluation_function):
     objective = Objective(name="test_objective", minimize=True)
 
     # Ax raises ValueError when two or more parameters have the same name
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="names must be unique"):
         Agent(sensors=[], dofs=[dof1, dof2], objectives=[objective], evaluation_function=mock_evaluation_function)
 
     # Same setup, unique name for dof3, no error

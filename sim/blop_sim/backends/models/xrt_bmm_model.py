@@ -2,7 +2,7 @@
 """
 
 __author__ = "Konstantin Klementiev", "Roman Chernikov"
-__date__ = "2026-05-01"
+__date__ = "2026-07-08"
 
 Created with xrtQook
 
@@ -12,6 +12,8 @@ None
 """
 
 import numpy as np
+import sys
+# sys.path.append(r"/home/jhanrahan/Code/blop-dev/.pixi/envs/default/lib/python3.12/site-packages")
 import xrt.backends.raycing.sources as rsources
 import xrt.backends.raycing.screens as rscreens
 import xrt.backends.raycing.materials as rmats
@@ -25,10 +27,6 @@ import xrt.backends.raycing.run as rrun
 import xrt.backends.raycing as raycing
 import xrt.plotter as xrtplot
 import xrt.runner as xrtrun
-
-# limits = [[-0.6, 0.6], [-0.45, 0.45]]
-limits = [[-5, 5], [-5, 5]]
-
 
 def build_histRGB(lb, gb, limits=None, isScreen=False, shape=None):
     if shape is None:
@@ -85,15 +83,16 @@ si01 = rmats.elemental.Si(
     quantities=[1.0])
 
 
-def build_beamline(ev=9050.0):
-    BMM = raycing.BeamLine(
+def build_beamline():
+    bl = raycing.BeamLine(
         name=r"BMM",
         description=None)
 
-    BMM.TPW = rsources.synchr.Wiggler(
-        bl=BMM,
+    bl.TPW = rsources.synchr.Wiggler(
+        bl=bl,
         name=r"TPW",
-        center=[0, 0, 0],
+        center=[0.0, 0.0, 0.0],
+        nrays=500000,
         eE=3.0,
         eI=0.5,
         eSigmaX=94.86832980505137,
@@ -101,24 +100,24 @@ def build_beamline(ev=9050.0):
         betaZ=2.0000000000000004,
         xPrimeMax=0.75,
         zPrimeMax=0.1,
-        eMin=ev-10,
-        eMax=ev+10,
+        eMin=9040.0,
+        eMax=9060.0,
         K=10,
         period=100,
         n=2)
 
-    BMM.FE_MASK = rapts.RectangularAperture(
-        bl=BMM,
+    bl.FE_MASK = rapts.RectangularAperture(
+        bl=bl,
         name=r"FE_MASK",
         center=[0.0, 12385.0, 0.0],
         blades={'left': -10, 'right': 10, 'bottom': -1.5, 'top': 1.5},
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0])
 
-    BMM.M1_VCM = roes.parametric.ParabolicalMirrorParam(
+    bl.M1_VCM = roes.parametric.ParabolicalMirrorParam(
         p=13000,
         isCylindrical=True,
-        bl=BMM,
+        bl=bl,
         name=r"M1_VCM",
         center=[0.0, 13000.0, 0.0],
         pitch=0.0035,
@@ -128,8 +127,8 @@ def build_beamline(ev=9050.0):
         isParametric=True,
         order=1)
 
-    BMM.Diag1 = rscreens.Screen(
-        bl=BMM,
+    bl.Diag1 = rscreens.Screen(
+        bl=bl,
         name=r"Diag1",
         center=[0.0, 25077, r"auto"],
         x=[1.0, -0.0, 0.0],
@@ -138,13 +137,13 @@ def build_beamline(ev=9050.0):
         limPhysY=[0.0, 0.0],
         cLimits=[0.0, 0.0])
 
-    BMM.DCM = roes.dcm.DCM(
-        bragg="{} eV".format(ev),
+    bl.DCM = roes.dcm.DCM(
+        bragg=[9050],
         limPhysX2=[-50.0, 50.0],
-        limPhysY2=[0.0, 100.0],
+        limPhysY2=[-100.0, 100.0],
         material2=Si111,
         fixedOffset=30,
-        bl=BMM,
+        bl=bl,
         name=r"DCM",
         center=[0, 26105, r"auto"],
         material=Si111,
@@ -152,15 +151,15 @@ def build_beamline(ev=9050.0):
         limPhysY=[-50.0, 50.0],
         order=1)
 
-    BMM.PinkBeamStop = rapts.RectangularAperture(
-        bl=BMM,
+    bl.PinkBeamStop = rapts.RectangularAperture(
+        bl=bl,
         name=r"PinkBeamStop",
         center=[0, 26450, r"auto"],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0])
 
-    BMM.Diag2 = rscreens.Screen(
-        bl=BMM,
+    bl.Diag2 = rscreens.Screen(
+        bl=bl,
         name=r"Diag2",
         center=[0.0, 27050, r"auto"],
         x=[1.0, -0.0, 0.0],
@@ -169,8 +168,8 @@ def build_beamline(ev=9050.0):
         limPhysY=[0.0, 0.0],
         cLimits=[0.0, 0.0])
 
-    BMM.M2_TFM = roes.ToroidMirror(
-        bl=BMM,
+    bl.M2_TFM = roes.ToroidMirror(
+        bl=bl,
         name=r"M2_TFM",
         center=[0, 28473, r"auto"],
         pitch=-0.0035,
@@ -179,11 +178,11 @@ def build_beamline(ev=9050.0):
         limPhysX=[-15.0, 15.0],
         limPhysY=[-550.0, 550.0],
         order=1,
-        R=15000000.0,
-        r=98.2)
+        R=7000000.0,
+        r=58.5)
 
-    BMM.M3_HRM = roes.base.OE(
-        bl=BMM,
+    bl.M3_HRM = roes.base.OE(
+        bl=bl,
         name=r"M3_HRM",
         center=[0, 30381, r"auto"],
         pitch=r"3mrad",
@@ -193,8 +192,8 @@ def build_beamline(ev=9050.0):
         limPhysY=[-550.0, 550.0],
         order=1)
 
-    BMM.NANO_BPM = rscreens.Screen(
-        bl=BMM,
+    bl.NANO_BPM = rscreens.Screen(
+        bl=bl,
         name=r"NANO_BPM",
         center=[0, 31122, r"auto"],
         x=[1.0, -0.0, 0.0],
@@ -203,16 +202,16 @@ def build_beamline(ev=9050.0):
         limPhysY=[0.0, 0.0],
         cLimits=[0.0, 0.0])
 
-    BMM.BeamShutter = rapts.RectangularAperture(
-        bl=BMM,
+    bl.BeamShutter = rapts.RectangularAperture(
+        bl=bl,
         name=r"BeamShutter",
         center=[0, 31555, r"auto"],
-        blades={'left': -10, 'right': 10, 'bottom': -3, 'top': 3},
+        blades={'left': -5, 'right': 5, 'bottom': -3, 'top': 3},
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0])
 
-    BMM.XAS_SAMPLE = rscreens.Screen(
-        bl=BMM,
+    bl.XAS_SAMPLE = rscreens.Screen(
+        bl=bl,
         name=r"XAS_SAMPLE",
         center=[0, 40300, r"auto"],
         x=[1.0, -0.0, 0.0],
@@ -222,8 +221,8 @@ def build_beamline(ev=9050.0):
         cLimits=[0.0, 0.0],
         histShape=[1456.0, 1088.0])
 
-    BMM.XRD_SAMPLE = rscreens.Screen(
-        bl=BMM,
+    bl.XRD_SAMPLE = rscreens.Screen(
+        bl=bl,
         name=r"XRD_SAMPLE",
         center=[0, 44509, r"auto"],
         x=[1.0, -0.0, 0.0],
@@ -232,46 +231,46 @@ def build_beamline(ev=9050.0):
         limPhysY=[0.0, 0.0],
         cLimits=[0.0, 0.0])
 
-    return BMM
+    return bl
 
 
-def run_process(BMM):
-    TPW_global = BMM.TPW.shine()
+def run_process(bl):
+    TPW_global = bl.TPW.shine()
 
-    FE_MASK_local = BMM.FE_MASK.propagate(
+    FE_MASK_local = bl.FE_MASK.propagate(
         beam=TPW_global)
 
-    M1_VCM_global, M1_VCM_local = BMM.M1_VCM.reflect(
+    M1_VCM_global, M1_VCM_local = bl.M1_VCM.reflect(
         beam=TPW_global)
 
-    Diag1_local = BMM.Diag1.expose(
+    Diag1_local = bl.Diag1.expose(
         beam=M1_VCM_global)
 
-    DCM_global, DCM_local1, DCM_local2 = BMM.DCM.double_reflect(
+    DCM_global, DCM_local1, DCM_local2 = bl.DCM.double_reflect(
         beam=M1_VCM_global)
 
-    PinkBeamStop_local = BMM.PinkBeamStop.propagate(
+    PinkBeamStop_local = bl.PinkBeamStop.propagate(
         beam=DCM_global)
 
-    Diag2_local = BMM.Diag2.expose(
+    Diag2_local = bl.Diag2.expose(
         beam=DCM_global)
 
-    M2_TFM_global, M2_TFM_local = BMM.M2_TFM.reflect(
+    M2_TFM_global, M2_TFM_local = bl.M2_TFM.reflect(
         beam=DCM_global)
 
-    M3_HRM_global, M3_HRM_local = BMM.M3_HRM.reflect(
+    M3_HRM_global, M3_HRM_local = bl.M3_HRM.reflect(
         beam=M2_TFM_global)
 
-    NANO_BPM_local = BMM.NANO_BPM.expose(
+    NANO_BPM_local = bl.NANO_BPM.expose(
         beam=M3_HRM_global)
 
-    BeamShutter_local = BMM.BeamShutter.propagate(
+    BeamShutter_local = bl.BeamShutter.propagate(
         beam=M3_HRM_global)
 
-    XAS_SAMPLE_local = BMM.XAS_SAMPLE.expose(
+    XAS_SAMPLE_local = bl.XAS_SAMPLE.expose(
         beam=M3_HRM_global)
 
-    XRD_SAMPLE_local = BMM.XRD_SAMPLE.expose(
+    XRD_SAMPLE_local = bl.XRD_SAMPLE.expose(
         beam=M3_HRM_global)
 
     outDict = {
@@ -345,7 +344,9 @@ def define_plots():
             ppb=1),
         caxis=xrtplot.XYCAxis(
             label=r"energy",
-            unit=r"eV", bins=544, ppb=1),
+            unit=r"eV",
+            bins=544,
+            ppb=1),
         title=r"03 - XAS Sample screen")
     plots.append(plot03)
     return plots
@@ -353,7 +354,6 @@ def define_plots():
 
 def main():
     BMM = build_beamline()
-    # BMM.glow()   # UNCOMMENT TO VIEW IN GLOW
     E0 = 0.5 * (BMM.TPW.eMin +
                 BMM.TPW.eMax)
     BMM.alignE=E0

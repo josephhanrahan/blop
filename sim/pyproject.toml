@@ -10,7 +10,6 @@ readme = "README.md"
 authors = [{ name = "Thomas Hopkins", email = "thopkins1@bnl.gov" }]
 requires-python = "==3.11.*"
 dependencies = [
-  "blop @ git+https://github.com/bluesky/blop.git@main",
   "ophyd-async",
   "h5py",
   "area-detector-handlers",
@@ -20,7 +19,6 @@ dependencies = [
   "scipy",
   "matplotlib",
   "ipykernel",
-  "xrt @ git+https://github.com/kklmn/xrt.git@new_glow",
 ]
 
 [tool.hatch.metadata]
